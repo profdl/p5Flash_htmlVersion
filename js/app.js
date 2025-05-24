@@ -10,6 +10,7 @@ let isPlaying = false; // Track if animation is playing
 let customDrawFunction = null; // Store the current draw function
 let userSetupFunction = null; // Store the user's setup function
 let userDrawFunction = null; // Store the user's draw function
+let autoUpdateEnabled = false; // Track if auto-update is enabled
 
 // Initialize the code editor
 const editor = ace.edit("code-editor");
@@ -251,41 +252,7 @@ function setupCodeEditor() {
     // Add play/stop buttons
     select('#play-code').mousePressed(() => {
         try {
-            // Get the code from the editor
-            const code = editor.getValue();
-            
-            // Create new functions from the code
-            const fullCode = `
-                ${code}
-                if (typeof setup === 'function') {
-                    userSetupFunction = setup;
-                }
-                if (typeof draw === 'function') {
-                    userDrawFunction = draw;
-                }
-            `;
-            
-            // Execute the code to define the functions
-            new Function(fullCode)();
-            
-            // Run setup once
-            if (userSetupFunction) {
-                userSetupFunction();
-            }
-            
-            // Start playing
-            isPlaying = true;
-            loop();
-            
-            // Update button states
-            select('#play-code').style('opacity', '0.5');
-            select('#stop-code').style('opacity', '1');
-            
-            // Disable drawing tools while code is running
-            selectAll('.tool').forEach(tool => {
-                tool.style('opacity', '0.5');
-                tool.style('pointer-events', 'none');
-            });
+            executeCode();
         } catch (error) {
             console.error('Error executing code:', error);
             alert('Error executing code: ' + error.message);
@@ -315,17 +282,63 @@ function setupCodeEditor() {
         });
     });
     
+    // Add auto-update checkbox listener
+    select('#auto-update').changed(() => {
+        autoUpdateEnabled = select('#auto-update').checked();
+    });
+    
     // Add event listener for code changes
     editor.getSession().on('change', debounce(() => {
-        // When code changes, stop the current execution and restart
-        if (isPlaying) {
+        if (autoUpdateEnabled) {
+            // If auto-update is enabled, execute the code
+            executeCode();
+        } else if (isPlaying) {
+            // If auto-update is disabled but code is playing, stop and restart
             select('#stop-code').mousePressed();
-            // Small delay to ensure the stop is complete
             setTimeout(() => {
                 select('#play-code').mousePressed();
             }, 100);
         }
     }, 500));
+}
+
+// Function to execute the code
+function executeCode() {
+    // Get the code from the editor
+    const code = editor.getValue();
+    
+    // Create new functions from the code
+    const fullCode = `
+        ${code}
+        if (typeof setup === 'function') {
+            userSetupFunction = setup;
+        }
+        if (typeof draw === 'function') {
+            userDrawFunction = draw;
+        }
+    `;
+    
+    // Execute the code to define the functions
+    new Function(fullCode)();
+    
+    // Run setup once
+    if (userSetupFunction) {
+        userSetupFunction();
+    }
+    
+    // Start playing
+    isPlaying = true;
+    loop();
+    
+    // Update button states
+    select('#play-code').style('opacity', '0.5');
+    select('#stop-code').style('opacity', '1');
+    
+    // Disable drawing tools while code is running
+    selectAll('.tool').forEach(tool => {
+        tool.style('opacity', '0.5');
+        tool.style('pointer-events', 'none');
+    });
 }
 
 // Debounce function to prevent too frequent updates

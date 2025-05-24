@@ -138,4 +138,23 @@ input[type="range"] {
 
 button {
     font-family: inherit;
+}
+
+.auto-update-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px;
+    color: #333;
+    cursor: pointer;
+}
+
+.auto-update-label input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.auto-update-label:hover {
+    background-color: #e8e8e8;
 } 
