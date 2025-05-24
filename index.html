@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>p5.js Drawing App</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.12/ace.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="toolbar">
+            <div class="tool-group">
+                <button id="brush-tool" class="tool active"><i class="fas fa-paint-brush"></i> Brush</button>
+                <button id="rectangle-tool" class="tool"><i class="fas fa-square"></i> Rectangle</button>
+                <button id="circle-tool" class="tool"><i class="fas fa-circle"></i> Circle</button>
+                <button id="line-tool" class="tool"><i class="fas fa-slash"></i> Line</button>
+            </div>
+            <div class="tool-group">
+                <input type="color" id="color-picker" value="#000000">
+                <input type="range" id="size-slider" min="1" max="50" value="5">
+                <button id="clear-canvas"><i class="fas fa-trash"></i> Clear</button>
+                <button id="undo"><i class="fas fa-undo"></i> Undo</button>
+                <button id="redo"><i class="fas fa-redo"></i> Redo</button>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="canvas-section">
+                <div id="canvas-container"></div>
+                <div class="control-panel">
+                    <div class="control-group">
+                        <button id="play-code" class="control-btn"><i class="fas fa-play"></i> Play</button>
+                        <button id="stop-code" class="control-btn"><i class="fas fa-stop"></i> Stop</button>
+                    </div>
+                </div>
+            </div>
+            <div id="code-panel">
+                <div id="code-editor"></div>
+            </div>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+    <script src="js/drawing.js"></script>
+    <script src="js/codeGenerator.js"></script>
+</body>
+</html> 
